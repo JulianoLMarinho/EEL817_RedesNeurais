@@ -1,4 +1,4 @@
-#Lista 1 - Exercício 7
+# Lista 1 - Exercício 7
 
 Para representar a RNA, foram criadas as classes RNA, Camada e FuncaoAtivacao.
 

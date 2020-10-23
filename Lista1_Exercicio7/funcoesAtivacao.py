@@ -1,4 +1,5 @@
 import math
+from funcaoAtivacao import *
 
 def relu(x):
     if x<0: return 0
@@ -20,8 +21,8 @@ def retornaFuncaoAtivacaoArray(lista, funcao):
     return lista
 
 def retornaFuncaoAtivacao(valor, funcao):
-    if funcao["nome"] == 'relu': return relu(valor)
-    if funcao["nome"] == 'tgh': return tgh(valor, funcao["parametros"] or [1])
-    if funcao["nome"] == 'linear': return linear(valor, funcao["parametros"] or [1,0])
-    if funcao["nome"] == 'sigmoidal': return sigmoidal(valor, funcao["parametros"] or [1])
+    if funcao.nome == 'relu': return relu(valor)
+    if funcao.nome == 'tgh': return tgh(valor, funcao.parametros or [1])
+    if funcao.nome == 'linear': return linear(valor, funcao.parametros or [1,0])
+    if funcao.nome == 'sigmoidal': return sigmoidal(valor, funcao.parametros or [1])
     else: return 0

@@ -1,7 +1,7 @@
 import numpy as np
-import funcoesAtivacao as fa
 from RNA import *
 from Camada import *
+from funcaoAtivacao import *
 
 #arrayPesos = [[[-0.3, -0.1, 0.0],[0.2, 0.1, 0.4]], [[0.3, 0.0, -0.1],[0.4,0.0,0.4],[0.1,0.3,0.0]], [[0.3,-0.1,0.5,-0.1],[0.4,0.3,-0.2,0.4]]]
 arrayPesos = [[[0.3, 0.1, 0.0], [-0.2, 0.3, 0.1], [-0.1, 0.0, 0.2], [-0.1, 0.0, 0.2]], [[0.2, 0.3, -0.1, -0.1], [-0.3, 0.4, 0.1, 0.2]]]
@@ -60,16 +60,17 @@ rna = {
 }
 
 def MLP(rna):
-    entradaD = np.array(rna["entrada"])
-    for camada in rna["camadas"]:
+    entradaD = np.array(rna.entrada)
+    for camada in rna.camadas:
         entradaD = np.insert(entradaD, 0, 1)
-        if 'peso' not in camada.keys():
-            if ('neuronios' not in camada.keys()) or (camada['neuronios'] == None) or (not isinstance(camada['neuronios'], int)) or (camada['neuronios'] <= 0):
+        #print(entradaD)
+        if camada.peso == None:
+            if (camada.neuronios == None) or (not isinstance(camada.neuronios, int)) or (camada.neuronios <= 0):
                 return "Para camadas sem peso definido, o número de neurônios deve ser informado."
-            camada['peso'] = getPesosAleatorios(camada['neuronios'], len(entradaD))
-        matrizPeso = np.array(camada["peso"])       
+            camada.peso = getPesosAleatorios(camada.neuronios, len(entradaD))
+        matrizPeso = np.array(camada.peso)  
         entradaD = np.dot(entradaD, matrizPeso.transpose())
-        entradaD = fa.retornaFuncaoAtivacaoArray(entradaD, camada["funcaoAtivacao"])
+        entradaD = camada.funcaoAtivacao.retornaFuncaoAtivacaoArray(entradaD)
     return entradaD
 
 def getPesosAleatorios(linhas, colunas):
@@ -77,11 +78,11 @@ def getPesosAleatorios(linhas, colunas):
 
 
 camadas = []
-camadas.append(Camada([[0.3, 0.1, 0.0], [-0.2, 0.3, 0.1], [-0.1, 0.0, 0.2]], {"nome": 'relu'}, 3))
-camadas.append(Camada([[0.2, 0.3, -0.1, -0.1], [-0.3, 0.4, 0.1, 0.2]], {"nome": 'sigmoidal',"parametros": [5]}, 2))
+camadas.append(Camada(FuncaoAtivacao('relu'), [[0.3, 0.1, 0.0], [-0.2, 0.3, 0.1], [-0.1, 0.0, 0.2]]))
+camadas.append(Camada(FuncaoAtivacao('sigmoidal',[5]), [[0.2, 0.3, -0.1, -0.1], [-0.3, 0.4, 0.1, 0.2]]))
+
+#camadas.append(Camada(FuncaoAtivacao('relu'), 3))
+#camadas.append(Camada(FuncaoAtivacao('sigmoidal',[5]), 2))
 
 rnaClass = RNA([0.8, 0.7], camadas)
-print(camadas[0].peso)
-print(rnaClass.camadas)
-
-print(MLP(rna))
+print(MLP(rnaClass))
